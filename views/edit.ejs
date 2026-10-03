@@ -1,0 +1,4 @@
+<%- include('partials/head') %>
+<h1 class="page-title mb-4">Sửa sản phẩm</h1>
+<%- include('partials/form', { action: '/edit/' + product._id, product, submit: 'Lưu thay đổi', cancel: '/products/' + product._id }) %>
+<%- include('partials/foot') %>

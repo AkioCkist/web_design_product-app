@@ -1,0 +1,20 @@
+<%- include('partials/head') %>
+<a href="/" class="back">← Tất cả sản phẩm</a>
+<div class="row g-5 mt-1">
+  <div class="col-md-6"><img src="<%= product.image %>" class="detail-img" alt="<%= product.name %>"></div>
+  <div class="col-md-6">
+    <h1 class="page-title"><%= product.name %></h1>
+    <p class="detail-price">$<%= product.price.toLocaleString('en-US') %></p>
+    <dl class="meta">
+      <dt>Số lượng còn</dt><dd><%= product.quantity %></dd>
+      <dt>Ngày thêm</dt><dd><%= product.createdAt.toLocaleDateString('vi-VN') %></dd>
+    </dl>
+    <div class="d-flex gap-2 mt-4">
+      <a href="/edit/<%= product._id %>" class="btn btn-accent">Sửa sản phẩm</a>
+      <form action="/delete/<%= product._id %>" method="POST" onsubmit="return confirm('Xóa sản phẩm này?')">
+        <button type="submit" class="btn btn-danger-quiet">Xóa</button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('partials/foot') %>
