@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "seed": "node scripts/seed.js",
+    "check": "node --check app.js && node --check controllers/productController.js && node --check routes/productRoutes.js && node --check scripts/seed.js"
   },
   "dependencies": {
     "dotenv": "^18.0.5",

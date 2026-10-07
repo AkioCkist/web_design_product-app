@@ -1,0 +1,44 @@
+<%- include('partials/head') %>
+<main id="main-content" class="shell page-space">
+  <header class="catalog-header">
+    <div><p class="eyebrow">CỬA HÀNG</p><h1>Tất cả sản phẩm</h1></div>
+    <p>Những món đồ thiết yếu với hình thức tinh giản và chất liệu được cân nhắc kỹ lưỡng.</p>
+  </header>
+
+  <form class="catalog-tools" action="/products" method="get">
+    <label class="search-field">
+      <span class="sr-only">Tìm sản phẩm</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+      <input type="search" name="q" value="<%= q %>" placeholder="Tìm theo tên, mô tả hoặc SKU">
+    </label>
+    <label>
+      <span class="sr-only">Lọc theo danh mục</span>
+      <select name="category" aria-label="Lọc theo danh mục">
+        <option value="">Mọi danh mục</option>
+        <% categories.forEach(item => { %><option value="<%= item %>" <%= category === item ? 'selected' : '' %>><%= item %></option><% }) %>
+      </select>
+    </label>
+    <label>
+      <span class="sr-only">Sắp xếp sản phẩm</span>
+      <select name="sort" aria-label="Sắp xếp sản phẩm">
+        <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
+        <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Giá thấp đến cao</option>
+        <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Giá cao đến thấp</option>
+        <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Tên A–Z</option>
+      </select>
+    </label>
+    <button class="button button-dark" type="submit">Áp dụng</button>
+  </form>
+
+  <div class="results-bar">
+    <p><strong class="tabular"><%= products.length %></strong> kết quả<%= q ? ` cho “${q}”` : '' %></p>
+    <% if (q || category || sort !== 'newest') { %><a href="/products">Xóa bộ lọc</a><% } %>
+  </div>
+
+  <% if (products.length) { %>
+    <div class="product-grid catalog-grid"><% products.forEach(product => { %><%- include('partials/product-card', { product }) %><% }) %></div>
+  <% } else { %>
+    <div class="empty-state"><h2>Không tìm thấy sản phẩm</h2><p>Thử từ khóa khác hoặc xóa bộ lọc để xem toàn bộ bộ sưu tập.</p><a class="button button-dark" href="/products">Xem tất cả sản phẩm</a></div>
+  <% } %>
+</main>
+<%- include('partials/foot') %>

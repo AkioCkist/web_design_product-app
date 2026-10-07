@@ -1,0 +1,61 @@
+<%- include('partials/head') %>
+<main id="main-content">
+  <section class="hero shell">
+    <div class="hero-copy">
+      <p class="eyebrow">NESTA / LIVING OBJECTS</p>
+      <h1>Ít hơn, nhưng<br>đúng hơn.</h1>
+      <p class="hero-lead">Nội thất và vật dụng được tuyển chọn để mang lại sự tĩnh tại, công năng và vẻ đẹp lâu bền cho không gian sống.</p>
+      <div class="hero-actions">
+        <a class="button button-dark" href="/products">Khám phá sản phẩm</a>
+        <a class="text-link" href="#collections">Xem bộ sưu tập <span aria-hidden="true">↘</span></a>
+      </div>
+      <div class="hero-proof">
+        <span>Vật liệu có trách nhiệm</span><span>Thiết kế tuyển chọn</span><span>Giao hàng toàn quốc</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-orbit" aria-hidden="true"></div>
+      <img src="/uploads/nesta-arc-lamp.png" alt="Đèn bàn Arc màu trắng ngà">
+      <div class="feature-ticket">
+        <span>Sản phẩm nổi bật</span>
+        <strong>Arc</strong>
+        <p>Ánh sáng dịu cho những khoảng lặng.</p>
+        <a href="/products?category=Chiếu+sáng" aria-label="Xem sản phẩm chiếu sáng">↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section shell" aria-labelledby="featured-title">
+    <div class="section-heading">
+      <div><p class="eyebrow">ĐƯỢC YÊU THÍCH</p><h2 id="featured-title">Những lựa chọn nổi bật</h2></div>
+      <a class="text-link" href="/products">Xem tất cả <span aria-hidden="true">→</span></a>
+    </div>
+    <% if (featured.length) { %>
+      <div class="product-grid"><% featured.forEach(product => { %><%- include('partials/product-card', { product }) %><% }) %></div>
+    <% } else { %>
+      <div class="empty-state"><h3>Chưa có sản phẩm nổi bật</h3><p>Chọn trạng thái “Nổi bật” trong trang quản lý để sản phẩm xuất hiện tại đây.</p><a class="button button-dark" href="/admin/products">Đến trang quản lý</a></div>
+    <% } %>
+  </section>
+
+  <section class="section shell" id="collections" aria-labelledby="collection-title">
+    <div class="section-heading"><div><p class="eyebrow">THEO KHÔNG GIAN</p><h2 id="collection-title">Tìm đúng món cho căn nhà</h2></div></div>
+    <div class="category-grid">
+      <% categories.forEach((item, index) => { %>
+        <a class="category-card category-<%= index + 1 %>" href="/products?category=<%= encodeURIComponent(item) %>">
+          <span class="category-index">0<%= index + 1 %></span>
+          <div><h3><%= item %></h3><p><%= categoryCounts[item] || 0 %> sản phẩm</p></div>
+          <span class="category-arrow" aria-hidden="true">↗</span>
+        </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="manifesto">
+    <div class="shell manifesto-inner">
+      <p class="eyebrow">TRIẾT LÝ NESTA</p>
+      <p class="manifesto-quote">Chúng tôi tin một căn nhà đẹp không cần nhiều đồ. Chỉ cần những món đồ <em>đúng</em>—được làm tốt, dùng lâu và khiến mỗi ngày dễ chịu hơn.</p>
+      <a class="button button-light" href="/products">Bắt đầu lựa chọn</a>
+    </div>
+  </section>
+</main>
+<%- include('partials/foot') %>

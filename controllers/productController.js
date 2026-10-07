@@ -1,76 +1,134 @@
 const fs = require('fs');
 const path = require('path');
 const Product = require('../models/product');
+const { CATEGORIES } = require('../models/product');
+
+const uploadRoot = path.join(__dirname, '..', 'public');
+const sortOptions = {
+  newest: { createdAt: -1 },
+  'price-asc': { price: 1 },
+  'price-desc': { price: -1 },
+  name: { name: 1 }
+};
 
 const removeImage = (imageUrl) => {
-  if (!imageUrl) return;
-  fs.unlink(path.join(__dirname, '..', 'public', imageUrl), () => {});
+  if (!imageUrl || path.basename(imageUrl).startsWith('nesta-')) return;
+  fs.unlink(path.join(uploadRoot, imageUrl), () => {});
 };
-const notFound = () => Object.assign(new Error('Not found'), { name: 'CastError' });
 
-// Danh sách sản phẩm
+const notFound = () => Object.assign(new Error('Sản phẩm không tồn tại.'), { status: 404 });
+const clean = (value) => typeof value === 'string' ? value.trim() : value;
+
+const productFields = (body) => ({
+  name: clean(body.name),
+  sku: clean(body.sku)?.toUpperCase(),
+  price: Number(body.price),
+  quantity: Number(body.quantity),
+  category: clean(body.category),
+  summary: clean(body.summary),
+  description: clean(body.description),
+  material: clean(body.material),
+  color: clean(body.color),
+  dimensions: clean(body.dimensions),
+  featured: body.featured === 'on'
+});
+
+exports.home = async (req, res) => {
+  const [featured, categoryStats] = await Promise.all([
+    Product.find({ featured: true }).sort({ createdAt: -1 }).limit(4),
+    Product.aggregate([{ $group: { _id: '$category', count: { $sum: 1 } } }])
+  ]);
+
+  const categoryCounts = Object.fromEntries(categoryStats.map((item) => [item._id, item.count]));
+  res.render('home', { title: 'Nội thất tối giản cho nhịp sống hiện đại', featured, categoryCounts, categories: CATEGORIES });
+};
+
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.find().sort({ createdAt: -1 });
-  res.render('index', { title: 'Sản phẩm', products, q: '' });
-};
+  const q = clean(req.query.q || '');
+  const category = CATEGORIES.includes(req.query.category) ? req.query.category : '';
+  const sort = sortOptions[req.query.sort] ? req.query.sort : 'newest';
+  const query = {};
 
-// Form thêm
-exports.showAddProductForm = (req, res) => {
-  res.render('add', { title: 'Thêm sản phẩm', q: '' });
-};
-
-// Thêm sản phẩm
-exports.addProduct = async (req, res) => {
-  if (!req.file) throw new Error('Vui lòng chọn hình ảnh cho sản phẩm.');
-  const { name, price, quantity } = req.body;
-  try {
-    await Product.create({ name, price, quantity, image: `/uploads/${req.file.filename}` });
-  } catch (err) {
-    removeImage(`/uploads/${req.file.filename}`);
-    throw err;
+  if (q) {
+    const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    query.$or = [
+      { name: { $regex: safe, $options: 'i' } },
+      { summary: { $regex: safe, $options: 'i' } },
+      { sku: { $regex: safe, $options: 'i' } }
+    ];
   }
-  res.redirect('/');
+  if (category) query.category = category;
+
+  const products = await Product.find(query).sort(sortOptions[sort]);
+  res.render('products', { title: 'Tất cả sản phẩm', products, q, category, sort, categories: CATEGORIES });
 };
 
-// Form sửa
-exports.showEditProductForm = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) throw notFound();
-  res.render('edit', { title: 'Sửa sản phẩm', product, q: '' });
-};
-
-// Cập nhật
-exports.updateProduct = async (req, res) => {
-  const { name, price, quantity } = req.body;
-  const product = await Product.findById(req.params.id);
-  if (!product) throw notFound();
-
-  product.set({ name, price, quantity });
-  const oldImage = product.image;
-  if (req.file) product.image = `/uploads/${req.file.filename}`;
-  await product.save();
-  if (req.file) removeImage(oldImage);
-  res.redirect(`/products/${product._id}`);
-};
-
-// Xóa
-exports.deleteProduct = async (req, res) => {
-  const product = await Product.findByIdAndDelete(req.params.id);
-  if (product) removeImage(product.image);
-  res.redirect('/');
-};
-
-// Chi tiết
 exports.showProductDetail = async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (!product) throw notFound();
-  res.render('show', { title: product.name, product, q: '' });
+  const related = await Product.find({ _id: { $ne: product._id }, category: product.category }).limit(3);
+  res.render('show', { title: product.name, product, related });
 };
 
-// Tìm theo tên
-exports.searchProduct = async (req, res) => {
-  const q = (req.query.q || '').trim();
-  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const products = await Product.find({ name: { $regex: safe, $options: 'i' } }).sort({ createdAt: -1 });
-  res.render('index', { title: q ? `Tìm "${q}"` : 'Sản phẩm', products, q });
+exports.adminProducts = async (req, res) => {
+  const products = await Product.find().sort({ updatedAt: -1 });
+  const notice = req.query.created ? 'Đã tạo sản phẩm mới.'
+    : req.query.updated ? 'Đã lưu thay đổi.'
+      : req.query.deleted ? 'Đã xóa sản phẩm.' : '';
+  res.render('admin/index', { title: 'Quản lý sản phẩm', products, notice });
+};
+
+exports.showAddProductForm = (req, res) => {
+  res.render('admin/form-page', { title: 'Thêm sản phẩm', product: null, categories: CATEGORIES, formAction: '/admin/products', submitLabel: 'Tạo sản phẩm' });
+};
+
+exports.addProduct = async (req, res) => {
+  if (!req.file) throw new Error('Vui lòng chọn hình ảnh cho sản phẩm.');
+  try {
+    await Product.create({ ...productFields(req.body), image: `/uploads/${req.file.filename}` });
+  } catch (error) {
+    removeImage(`/uploads/${req.file.filename}`);
+    throw error;
+  }
+  res.redirect('/admin/products?created=1');
+};
+
+exports.showEditProductForm = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) throw notFound();
+  res.render('admin/form-page', { title: 'Chỉnh sửa sản phẩm', product, categories: CATEGORIES, formAction: `/admin/products/${product._id}?_method=PUT`, submitLabel: 'Lưu thay đổi' });
+};
+
+exports.updateProduct = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    if (req.file) removeImage(`/uploads/${req.file.filename}`);
+    throw notFound();
+  }
+
+  const oldImage = product.image;
+  product.set(productFields(req.body));
+  if (req.file) product.image = `/uploads/${req.file.filename}`;
+
+  try {
+    await product.save();
+  } catch (error) {
+    if (req.file) removeImage(`/uploads/${req.file.filename}`);
+    throw error;
+  }
+
+  if (req.file) removeImage(oldImage);
+  res.redirect('/admin/products?updated=1');
+};
+
+exports.deleteProduct = async (req, res) => {
+  const product = await Product.findByIdAndDelete(req.params.id);
+  if (product) removeImage(product.image);
+  res.redirect('/admin/products?deleted=1');
+};
+
+exports.searchRedirect = (req, res) => {
+  const params = new URLSearchParams();
+  if (req.query.q) params.set('q', req.query.q);
+  res.redirect(`/products${params.toString() ? `?${params}` : ''}`);
 };

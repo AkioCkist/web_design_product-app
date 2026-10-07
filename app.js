@@ -7,38 +7,52 @@ const path = require('path');
 const productRoutes = require('./routes/productRoutes');
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
-if (!PORT || !MONGO_URI) {
-  console.error('Thiếu PORT hoặc MONGO_URI trong file .env');
+if (!MONGO_URI) {
+  console.error('Thiếu MONGO_URI trong file .env');
   process.exit(1);
 }
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Đã kết nối MongoDB'))
-  .catch((err) => { console.error('Lỗi kết nối MongoDB:', err.message); process.exit(1); });
+  .catch((error) => {
+    console.error('Lỗi kết nối MongoDB:', error.message);
+    process.exit(1);
+  });
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.locals.formatVnd = (value) => new Intl.NumberFormat('vi-VN', {
+  style: 'currency', currency: 'VND', maximumFractionDigits: 0
+}).format(value);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  res.locals.currentYear = new Date().getFullYear();
+  next();
+});
 
 app.use('/', productRoutes);
 
-// 404
-app.use((req, res) => res.status(404).render('error', { title: 'Không tìm thấy', message: 'Trang bạn tìm không tồn tại.' }));
+app.use((req, res) => res.status(404).render('error', {
+  title: 'Không tìm thấy trang',
+  message: 'Trang bạn đang tìm không tồn tại hoặc đã được di chuyển.'
+}));
 
-// Xử lý lỗi chung
-app.use((err, req, res, next) => {
-  console.error(err);
-  const notFound = err.name === 'CastError';
-  res.status(notFound ? 404 : 400).render('error', {
-    title: notFound ? 'Không tìm thấy' : 'Có lỗi xảy ra',
-    message: notFound ? 'Sản phẩm không tồn tại.' : err.message
+app.use((error, req, res, next) => {
+  console.error(error);
+  const isNotFound = error.status === 404 || error.name === 'CastError';
+  const isDuplicateSku = error.code === 11000;
+  res.status(isNotFound ? 404 : 400).render('error', {
+    title: isNotFound ? 'Không tìm thấy sản phẩm' : 'Không thể hoàn tất',
+    message: isDuplicateSku ? 'Mã SKU đã tồn tại. Vui lòng chọn một mã khác.' : error.message
   });
 });
 
-app.listen(PORT, () => console.log(`Server chạy tại http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`NESTA đang chạy tại http://localhost:${PORT}`));
