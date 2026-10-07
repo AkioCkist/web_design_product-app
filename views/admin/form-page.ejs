@@ -1,9 +1,9 @@
 <%- include('../partials/head') %>
 <main id="main-content" class="shell page-space form-page">
-  <nav class="breadcrumbs" aria-label="Đường dẫn"><a href="/admin/products">Quản lý</a><span>/</span><span><%= title %></span></nav>
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/admin/products">Admin</a><span>/</span><span><%= title %></span></nav>
   <header class="form-heading">
     <p class="eyebrow">NESTA ADMIN</p><h1><%= title %></h1>
-    <p><%= product ? 'Cập nhật thông tin hiển thị, tồn kho và hình ảnh.' : 'Điền thông tin để thêm một sản phẩm mới vào catalog.' %></p>
+    <p><%= product ? 'Update storefront details, inventory, and imagery.' : 'Add a new object to the NESTA catalogue.' %></p>
   </header>
   <%- include('../partials/product-form', { product, categories, formAction, submitLabel }) %>
 </main>

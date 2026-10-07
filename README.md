@@ -1,27 +1,32 @@
 # NESTA — Minimal home store
 
-Website bán sản phẩm nội thất tối giản xây bằng Node.js, Express, MongoDB, EJS và Multer.
+A minimal ecommerce storefront built with Node.js, Express, MongoDB, EJS, Multer, and session-based cart state.
 
-## Chức năng
+## Features
 
-- Homepage giới thiệu bộ sưu tập và sản phẩm nổi bật
-- Catalog tìm kiếm, lọc danh mục và sắp xếp
-- Trang chi tiết sản phẩm và gợi ý cùng danh mục
-- Trang quản trị tạo, xem, sửa, xóa sản phẩm
-- Upload ảnh vào `public/uploads`
-- Script seed dữ liệu mẫu vào MongoDB
+- Editorial homepage with featured products and category collections
+- Product catalogue with search, category filters, and sorting
+- Product detail pages with related products
+- Session cart with quantity updates and item removal
+- Demo checkout with shipping summary and simulated payment confirmation
+- Product admin with create, read, update, and delete flows
+- Image uploads stored in `public/uploads`
+- Idempotent MongoDB seed script with six sample products
 
-## Chạy ứng dụng
+## Run locally
 
-1. Đảm bảo MongoDB đang chạy.
-2. Sao chép `.env.example` thành `.env` và điều chỉnh nếu cần.
-3. Chạy `npm install`.
-4. Chạy `npm run seed` để tạo dữ liệu mẫu.
-5. Chạy `npm start` và mở `http://localhost:3000`.
+1. Make sure MongoDB is running.
+2. Copy `.env.example` to `.env` and adjust the values if needed.
+3. Run `npm install`.
+4. Run `npm run seed` to upsert the sample products.
+5. Run `npm start` and open `http://localhost:3000`.
 
-## Cấu hình
+## Configuration
 
 ```env
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/productdb
+SESSION_SECRET=replace-with-a-long-random-string
 ```
+
+The checkout is intentionally a demonstration. It does not collect real card details, contact a payment provider, charge money, or create fulfilment requests.

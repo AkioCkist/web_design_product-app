@@ -1,8 +1,8 @@
 <%- include('../partials/head') %>
 <main id="main-content" class="shell page-space admin-page">
   <header class="admin-header">
-    <div><p class="eyebrow">NESTA ADMIN</p><h1>Quản lý sản phẩm</h1><p>Thêm mới, cập nhật tồn kho và quản lý toàn bộ catalog.</p></div>
-    <a class="button button-dark" href="/admin/products/new"><span aria-hidden="true">＋</span> Thêm sản phẩm</a>
+    <div><p class="eyebrow">NESTA ADMIN</p><h1>Manage products</h1><p>Add new pieces, update inventory, and manage the complete catalogue.</p></div>
+    <a class="button button-dark" href="/admin/products/new"><span aria-hidden="true">＋</span> Add product</a>
   </header>
 
   <% if (notice) { %><div class="notice" role="status"><%= notice %></div><% } %>
@@ -10,7 +10,7 @@
   <% if (products.length) { %>
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Tồn kho</th><th>Cập nhật</th><th><span class="sr-only">Hành động</span></th></tr></thead>
+        <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Updated</th><th><span class="sr-only">Actions</span></th></tr></thead>
         <tbody>
           <% products.forEach(product => { %>
             <tr>
@@ -19,21 +19,21 @@
               <td class="tabular"><%= formatVnd(product.price) %></td>
               <td class="tabular"><span class="stock <%= product.quantity < 6 ? 'is-low' : '' %>"><%= product.quantity %></span></td>
               <td><%= product.updatedAt.toLocaleDateString('vi-VN') %></td>
-              <td><div class="row-actions"><a href="/admin/products/<%= product._id %>/edit">Sửa</a><button type="button" class="danger-link" data-delete-id="<%= product._id %>" data-delete-name="<%= product.name %>">Xóa</button></div></td>
+              <td><div class="row-actions"><a href="/admin/products/<%= product._id %>/edit">Edit</a><button type="button" class="danger-link" data-delete-id="<%= product._id %>" data-delete-name="<%= product.name %>">Delete</button></div></td>
             </tr>
           <% }) %>
         </tbody>
       </table>
     </div>
   <% } else { %>
-    <div class="empty-state"><h2>Catalog đang trống</h2><p>Hãy tạo sản phẩm đầu tiên để bắt đầu cửa hàng.</p><a class="button button-dark" href="/admin/products/new">Thêm sản phẩm</a></div>
+    <div class="empty-state"><h2>Your catalogue is empty</h2><p>Add the first product to start building your shop.</p><a class="button button-dark" href="/admin/products/new">Add product</a></div>
   <% } %>
 
   <dialog class="delete-dialog" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
     <form id="delete-form" method="post">
-      <p class="eyebrow">XÁC NHẬN</p><h2 id="delete-title">Xóa sản phẩm?</h2>
-      <p id="delete-description">Bạn sắp xóa <strong id="delete-product-name"></strong>. Thao tác này không thể hoàn tác.</p>
-      <div class="dialog-actions"><button class="button button-outline" type="button" data-dialog-close>Hủy</button><button class="button button-danger" type="submit">Xóa sản phẩm</button></div>
+      <p class="eyebrow">PLEASE CONFIRM</p><h2 id="delete-title">Delete product?</h2>
+      <p id="delete-description">You are about to delete <strong id="delete-product-name"></strong>. This action cannot be undone.</p>
+      <div class="dialog-actions"><button class="button button-outline" type="button" data-dialog-close>Cancel</button><button class="button button-danger" type="submit">Delete product</button></div>
     </form>
   </dialog>
 </main>

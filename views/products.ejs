@@ -1,44 +1,44 @@
 <%- include('partials/head') %>
 <main id="main-content" class="shell page-space">
   <header class="catalog-header">
-    <div><p class="eyebrow">CỬA HÀNG</p><h1>Tất cả sản phẩm</h1></div>
-    <p>Những món đồ thiết yếu với hình thức tinh giản và chất liệu được cân nhắc kỹ lưỡng.</p>
+    <div><p class="eyebrow">THE SHOP</p><h1>All products</h1></div>
+    <p>Essential objects with restrained forms and materials chosen with care.</p>
   </header>
 
   <form class="catalog-tools" action="/products" method="get">
     <label class="search-field">
-      <span class="sr-only">Tìm sản phẩm</span>
+      <span class="sr-only">Search products</span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
-      <input type="search" name="q" value="<%= q %>" placeholder="Tìm theo tên, mô tả hoặc SKU">
+      <input type="search" name="q" value="<%= q %>" placeholder="Search by name, description, or SKU">
     </label>
     <label>
-      <span class="sr-only">Lọc theo danh mục</span>
-      <select name="category" aria-label="Lọc theo danh mục">
-        <option value="">Mọi danh mục</option>
+      <span class="sr-only">Filter by category</span>
+      <select name="category" aria-label="Filter by category">
+        <option value="">All categories</option>
         <% categories.forEach(item => { %><option value="<%= item %>" <%= category === item ? 'selected' : '' %>><%= item %></option><% }) %>
       </select>
     </label>
     <label>
-      <span class="sr-only">Sắp xếp sản phẩm</span>
-      <select name="sort" aria-label="Sắp xếp sản phẩm">
-        <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
-        <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Giá thấp đến cao</option>
-        <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Giá cao đến thấp</option>
-        <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Tên A–Z</option>
+      <span class="sr-only">Sort products</span>
+      <select name="sort" aria-label="Sort products">
+        <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest</option>
+        <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: low to high</option>
+        <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: high to low</option>
+        <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Name: A–Z</option>
       </select>
     </label>
-    <button class="button button-dark" type="submit">Áp dụng</button>
+    <button class="button button-dark" type="submit">Apply</button>
   </form>
 
   <div class="results-bar">
-    <p><strong class="tabular"><%= products.length %></strong> kết quả<%= q ? ` cho “${q}”` : '' %></p>
-    <% if (q || category || sort !== 'newest') { %><a href="/products">Xóa bộ lọc</a><% } %>
+    <p><strong class="tabular"><%= products.length %></strong> <%= products.length === 1 ? 'result' : 'results' %><%= q ? ` for “${q}”` : '' %></p>
+    <% if (q || category || sort !== 'newest') { %><a href="/products">Clear filters</a><% } %>
   </div>
 
   <% if (products.length) { %>
     <div class="product-grid catalog-grid"><% products.forEach(product => { %><%- include('partials/product-card', { product }) %><% }) %></div>
   <% } else { %>
-    <div class="empty-state"><h2>Không tìm thấy sản phẩm</h2><p>Thử từ khóa khác hoặc xóa bộ lọc để xem toàn bộ bộ sưu tập.</p><a class="button button-dark" href="/products">Xem tất cả sản phẩm</a></div>
+    <div class="empty-state"><h2>No products found</h2><p>Try another search or clear your filters to see the full collection.</p><a class="button button-dark" href="/products">View all products</a></div>
   <% } %>
 </main>
 <%- include('partials/foot') %>

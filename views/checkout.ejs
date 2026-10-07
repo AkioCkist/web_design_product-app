@@ -1,0 +1,51 @@
+<%- include('partials/head') %>
+<main id="main-content" class="shell page-space checkout-page">
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/cart">Cart</a><span>/</span><span>Checkout</span></nav>
+  <header class="checkout-header"><p class="eyebrow">SECURE DEMO CHECKOUT</p><h1>Checkout</h1><p>No real payment details are required or processed.</p></header>
+
+  <div class="checkout-layout">
+    <form class="checkout-form" action="/checkout" method="post">
+      <% if (error) { %><div class="form-error" role="alert"><strong>Check your details</strong><span><%= error %></span></div><% } %>
+      <section class="checkout-section">
+        <div class="checkout-section-title"><span>01</span><div><h2>Contact</h2><p>Where should we send the receipt?</p></div></div>
+        <div class="checkout-fields">
+          <div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required value="<%= values.firstName || '' %>"></div>
+          <div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" autocomplete="family-name" required value="<%= values.lastName || '' %>"></div>
+          <div class="field full"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required value="<%= values.email || '' %>" placeholder="you@example.com"></div>
+        </div>
+      </section>
+
+      <section class="checkout-section">
+        <div class="checkout-section-title"><span>02</span><div><h2>Delivery</h2><p>Shipping is currently available within Vietnam.</p></div></div>
+        <div class="checkout-fields">
+          <div class="field full"><label for="address">Street address</label><input id="address" name="address" autocomplete="street-address" required value="<%= values.address || '' %>"></div>
+          <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" required value="<%= values.city || '' %>"></div>
+          <div class="field"><label for="postalCode">Postal code <span>Optional</span></label><input id="postalCode" name="postalCode" autocomplete="postal-code" value="<%= values.postalCode || '' %>"></div>
+          <div class="field full"><label for="country">Country</label><input id="country" value="Vietnam" disabled></div>
+        </div>
+      </section>
+
+      <section class="checkout-section">
+        <div class="checkout-section-title"><span>03</span><div><h2>Payment</h2><p>Choose a simulation method. Nothing will be charged.</p></div></div>
+        <fieldset class="payment-options">
+          <legend class="sr-only">Payment method</legend>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="demo-card" required <%= values.paymentMethod === 'demo-card' ? 'checked' : '' %>><span><strong>Demo card</strong><small>Instantly approve a simulated payment</small></span><span class="demo-pill">DEMO</span></label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="cash-on-delivery" required <%= values.paymentMethod === 'cash-on-delivery' ? 'checked' : '' %>><span><strong>Pay on delivery</strong><small>Simulate payment when the order arrives</small></span></label>
+        </fieldset>
+      </section>
+      <button class="button button-dark place-order-button" type="submit">Place demo order · <%= formatVnd(total) %></button>
+      <p class="checkout-disclaimer">By placing this demo order, you confirm that no real purchase or payment will occur.</p>
+    </form>
+
+    <aside class="checkout-summary">
+      <h2>Your order</h2>
+      <div class="checkout-products">
+        <% items.forEach(({ product, quantity, lineTotal }) => { %>
+          <div class="checkout-product"><div><img src="<%= product.image %>" alt=""><span class="item-quantity tabular"><%= quantity %></span></div><p><strong><%= product.name %></strong><small><%= product.color %></small></p><span class="tabular"><%= formatVnd(lineTotal) %></span></div>
+        <% }) %>
+      </div>
+      <dl><div><dt>Subtotal</dt><dd><%= formatVnd(subtotal) %></dd></div><div><dt>Shipping</dt><dd><%= shipping ? formatVnd(shipping) : 'Free' %></dd></div><div class="summary-total"><dt>Total</dt><dd><%= formatVnd(total) %></dd></div></dl>
+    </aside>
+  </div>
+</main>
+<%- include('partials/foot') %>

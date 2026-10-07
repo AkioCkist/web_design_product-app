@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="NESTA tuyển chọn nội thất và đồ gia dụng tối giản cho không gian sống hiện đại.">
+  <meta name="description" content="NESTA curates minimal furniture and home objects for considered modern living.">
   <title><%= title %> · NESTA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,35 +12,38 @@
   <script src="/js/app.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Bỏ qua đến nội dung</a>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="announcement">
     <div class="shell announcement-inner">
-      <p>Miễn phí giao hàng cho đơn từ 2.000.000₫</p>
-      <a href="/products">Khám phá bộ sưu tập <span aria-hidden="true">↗</span></a>
+      <p>Free shipping on orders over <%= formatVnd(2000000) %></p>
+      <a href="/products">Explore the collection <span aria-hidden="true">↗</span></a>
     </div>
   </div>
   <header class="site-header">
     <div class="shell nav-wrap">
-      <a class="brand" href="/" aria-label="NESTA — Trang chủ">
+      <a class="brand" href="/" aria-label="NESTA — Home">
         <span class="brand-mark" aria-hidden="true"></span>NESTA
       </a>
-      <nav class="desktop-nav" aria-label="Điều hướng chính">
-        <a class="<%= currentPath === '/' ? 'is-active' : '' %>" href="/">Trang chủ</a>
-        <a class="<%= currentPath.startsWith('/products') ? 'is-active' : '' %>" href="/products">Sản phẩm</a>
-        <a href="/#collections">Bộ sưu tập</a>
-        <a class="<%= currentPath.startsWith('/admin') ? 'is-active' : '' %>" href="/admin/products">Quản lý</a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a class="<%= currentPath === '/' ? 'is-active' : '' %>" href="/">Home</a>
+        <a class="<%= currentPath.startsWith('/products') ? 'is-active' : '' %>" href="/products">Shop</a>
+        <a href="/#collections">Collections</a>
+        <a class="<%= currentPath.startsWith('/admin') ? 'is-active' : '' %>" href="/admin/products">Admin</a>
       </nav>
       <div class="nav-actions">
-        <a class="icon-button" href="/products" aria-label="Tìm kiếm sản phẩm">
+        <a class="icon-button" href="/products" aria-label="Search products">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
         </a>
-        <a class="nav-cta" href="/products">Mua sắm</a>
+        <a class="cart-link <%= currentPath.startsWith('/cart') || currentPath.startsWith('/checkout') ? 'is-active' : '' %>" href="/cart" aria-label="Cart with <%= cartCount %> items">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L20.5 8H6"></path><circle cx="10" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle></svg>
+          <span>Cart</span><strong class="tabular"><%= cartCount %></strong>
+        </a>
         <details class="mobile-nav">
-          <summary aria-label="Mở menu">
+          <summary aria-label="Open menu">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
           </summary>
-          <nav aria-label="Điều hướng di động">
-            <a href="/">Trang chủ</a><a href="/products">Sản phẩm</a><a href="/#collections">Bộ sưu tập</a><a href="/admin/products">Quản lý</a>
+          <nav aria-label="Mobile navigation">
+            <a href="/">Home</a><a href="/products">Shop</a><a href="/#collections">Collections</a><a href="/cart">Cart (<%= cartCount %>)</a><a href="/admin/products">Admin</a>
           </nav>
         </details>
       </div>

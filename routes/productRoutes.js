@@ -24,7 +24,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => imageExtensions[file.mimetype]
     ? cb(null, true)
-    : cb(new Error('Chỉ chấp nhận ảnh JPG, PNG hoặc WEBP.'))
+    : cb(new Error('Only JPG, PNG, and WEBP images are accepted.'))
 });
 
 const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);

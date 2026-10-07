@@ -1,0 +1,51 @@
+<%- include('partials/head') %>
+<main id="main-content" class="shell page-space cart-page">
+  <header class="cart-header">
+    <div><p class="eyebrow">YOUR SELECTION</p><h1>Shopping cart</h1></div>
+    <p><span class="tabular"><%= items.reduce((total, item) => total + item.quantity, 0) %></span> <%= items.reduce((total, item) => total + item.quantity, 0) === 1 ? 'item' : 'items' %></p>
+  </header>
+
+  <% if (notice) { %><div class="notice" role="status"><%= notice %></div><% } %>
+
+  <% if (items.length) { %>
+    <div class="cart-layout">
+      <section class="cart-items" aria-label="Cart items">
+        <% items.forEach(({ product, quantity, lineTotal }) => { %>
+          <article class="cart-item">
+            <a class="cart-item-image" href="/products/<%= product._id %>"><img src="<%= product.image %>" alt="<%= product.name %>"></a>
+            <div class="cart-item-copy">
+              <p class="product-category"><%= product.category %></p>
+              <h2><a href="/products/<%= product._id %>"><%= product.name %></a></h2>
+              <p><%= product.color %> · <%= product.material %></p>
+              <form class="quantity-form" action="/cart/items/<%= product._id %>/update" method="post">
+                <label for="quantity-<%= product._id %>">Quantity</label>
+                <input class="tabular" id="quantity-<%= product._id %>" name="quantity" type="number" value="<%= quantity %>" min="1" max="<%= product.quantity %>">
+                <button type="submit">Update</button>
+              </form>
+            </div>
+            <div class="cart-item-end">
+              <strong class="tabular"><%= formatVnd(lineTotal) %></strong>
+              <form action="/cart/items/<%= product._id %>?_method=DELETE" method="post"><button class="danger-link" type="submit">Remove</button></form>
+            </div>
+          </article>
+        <% }) %>
+      </section>
+
+      <aside class="order-summary">
+        <p class="eyebrow">ORDER SUMMARY</p>
+        <dl>
+          <div><dt>Subtotal</dt><dd class="tabular"><%= formatVnd(subtotal) %></dd></div>
+          <div><dt>Shipping</dt><dd class="tabular"><%= shipping ? formatVnd(shipping) : 'Free' %></dd></div>
+          <div class="summary-total"><dt>Total</dt><dd class="tabular"><%= formatVnd(total) %></dd></div>
+        </dl>
+        <% if (shipping) { %><p class="shipping-note">Add <strong><%= formatVnd(freeShippingThreshold - subtotal) %></strong> more for free shipping.</p><% } else { %><p class="shipping-note is-qualified">You qualify for free shipping.</p><% } %>
+        <a class="button button-dark checkout-button" href="/checkout">Continue to checkout</a>
+        <a class="continue-link" href="/products">← Continue shopping</a>
+        <p class="demo-note">Checkout is a demonstration. No real payment will be processed.</p>
+      </aside>
+    </div>
+  <% } else { %>
+    <div class="empty-state cart-empty"><h2>Your cart is empty</h2><p>Start with one considered object and build your selection from there.</p><a class="button button-dark" href="/products">Explore products</a></div>
+  <% } %>
+</main>
+<%- include('partials/foot') %>

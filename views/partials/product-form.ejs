@@ -1,43 +1,43 @@
 <form class="product-form" action="<%= formAction %>" method="post" enctype="multipart/form-data">
   <section class="form-section">
-    <div class="form-section-title"><span>01</span><div><h2>Thông tin cơ bản</h2><p>Tên, mã quản lý và mô tả sản phẩm.</p></div></div>
+    <div class="form-section-title"><span>01</span><div><h2>Basic information</h2><p>Name, inventory reference, and product story.</p></div></div>
     <div class="form-fields">
-      <div class="field full"><label for="name">Tên sản phẩm</label><input id="name" name="name" type="text" maxlength="120" required value="<%= product ? product.name : '' %>" placeholder="Ví dụ: Đèn bàn Arc"></div>
-      <div class="field"><label for="sku">Mã SKU</label><input id="sku" name="sku" type="text" maxlength="40" required value="<%= product ? product.sku : '' %>" placeholder="NES-LGT-001"></div>
-      <div class="field"><label for="category">Danh mục</label><select id="category" name="category" required><option value="" disabled <%= product ? '' : 'selected' %>>Chọn danh mục</option><% categories.forEach(item => { %><option value="<%= item %>" <%= product && product.category === item ? 'selected' : '' %>><%= item %></option><% }) %></select></div>
-      <div class="field full"><label for="summary">Mô tả ngắn</label><input id="summary" name="summary" type="text" maxlength="180" required value="<%= product ? product.summary : '' %>" placeholder="Một câu giới thiệu ngắn gọn."><small>Hiển thị ở đầu trang chi tiết.</small></div>
-      <div class="field full"><label for="description">Mô tả chi tiết</label><textarea id="description" name="description" rows="5" maxlength="1200" required placeholder="Câu chuyện, công năng và điểm đặc biệt của sản phẩm..."><%= product ? product.description : '' %></textarea></div>
+      <div class="field full"><label for="name">Product name</label><input id="name" name="name" type="text" maxlength="120" required value="<%= product ? product.name : '' %>" placeholder="Example: Arc Table Lamp"></div>
+      <div class="field"><label for="sku">SKU</label><input id="sku" name="sku" type="text" maxlength="40" required value="<%= product ? product.sku : '' %>" placeholder="NES-LGT-001"></div>
+      <div class="field"><label for="category">Category</label><select id="category" name="category" required><option value="" disabled <%= product ? '' : 'selected' %>>Choose a category</option><% categories.forEach(item => { %><option value="<%= item %>" <%= product && product.category === item ? 'selected' : '' %>><%= item %></option><% }) %></select></div>
+      <div class="field full"><label for="summary">Short description</label><input id="summary" name="summary" type="text" maxlength="180" required value="<%= product ? product.summary : '' %>" placeholder="A concise one-line introduction."><small>Shown near the top of the product page.</small></div>
+      <div class="field full"><label for="description">Full description</label><textarea id="description" name="description" rows="5" maxlength="1200" required placeholder="Describe the story, function, and defining details..."><%= product ? product.description : '' %></textarea></div>
     </div>
   </section>
 
   <section class="form-section">
-    <div class="form-section-title"><span>02</span><div><h2>Giá & tồn kho</h2><p>Thông tin bán hàng và trạng thái hiển thị.</p></div></div>
+    <div class="form-section-title"><span>02</span><div><h2>Price & inventory</h2><p>Sales information and storefront status.</p></div></div>
     <div class="form-fields">
-      <div class="field"><label for="price">Giá bán (₫)</label><input class="tabular" id="price" name="price" type="number" min="0" step="1000" required value="<%= product ? product.price : '' %>" placeholder="2390000"></div>
-      <div class="field"><label for="quantity">Số lượng tồn</label><input class="tabular" id="quantity" name="quantity" type="number" min="0" step="1" required value="<%= product ? product.quantity : '' %>" placeholder="10"></div>
-      <label class="checkbox-field full"><input type="checkbox" name="featured" <%= product && product.featured ? 'checked' : '' %>><span><strong>Sản phẩm nổi bật</strong><small>Hiển thị sản phẩm trên homepage.</small></span></label>
+      <div class="field"><label for="price">Price (₫)</label><input class="tabular" id="price" name="price" type="number" min="0" step="1000" required value="<%= product ? product.price : '' %>" placeholder="2390000"></div>
+      <div class="field"><label for="quantity">Stock quantity</label><input class="tabular" id="quantity" name="quantity" type="number" min="0" step="1" required value="<%= product ? product.quantity : '' %>" placeholder="10"></div>
+      <label class="checkbox-field full"><input type="checkbox" name="featured" <%= product && product.featured ? 'checked' : '' %>><span><strong>Featured product</strong><small>Show this product on the homepage.</small></span></label>
     </div>
   </section>
 
   <section class="form-section">
-    <div class="form-section-title"><span>03</span><div><h2>Đặc tính</h2><p>Giúp khách hàng hiểu rõ sản phẩm.</p></div></div>
+    <div class="form-section-title"><span>03</span><div><h2>Specifications</h2><p>Help customers understand the product.</p></div></div>
     <div class="form-fields">
-      <div class="field"><label for="material">Chất liệu</label><input id="material" name="material" type="text" maxlength="100" required value="<%= product ? product.material : '' %>" placeholder="Gốm mờ, giấy xếp nếp"></div>
-      <div class="field"><label for="color">Màu sắc</label><input id="color" name="color" type="text" maxlength="80" required value="<%= product ? product.color : '' %>" placeholder="Trắng ngà"></div>
-      <div class="field full"><label for="dimensions">Kích thước</label><input id="dimensions" name="dimensions" type="text" maxlength="100" required value="<%= product ? product.dimensions : '' %>" placeholder="Ø 38 × C 42 cm"></div>
+      <div class="field"><label for="material">Material</label><input id="material" name="material" type="text" maxlength="100" required value="<%= product ? product.material : '' %>" placeholder="Matte ceramic, pleated paper"></div>
+      <div class="field"><label for="color">Colour</label><input id="color" name="color" type="text" maxlength="80" required value="<%= product ? product.color : '' %>" placeholder="Warm ivory"></div>
+      <div class="field full"><label for="dimensions">Dimensions</label><input id="dimensions" name="dimensions" type="text" maxlength="100" required value="<%= product ? product.dimensions : '' %>" placeholder="Ø 38 × H 42 cm"></div>
     </div>
   </section>
 
   <section class="form-section">
-    <div class="form-section-title"><span>04</span><div><h2>Hình ảnh</h2><p>Ảnh vuông tối thiểu 1000px cho kết quả tốt nhất.</p></div></div>
+    <div class="form-section-title"><span>04</span><div><h2>Image</h2><p>Use a square image of at least 1000px for best results.</p></div></div>
     <div class="form-fields">
       <div class="upload-field full">
-        <label for="image"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"></path></svg><strong><%= product ? 'Chọn ảnh thay thế' : 'Tải ảnh sản phẩm lên' %></strong><span>PNG, JPG hoặc WEBP · tối đa 5MB</span></label>
+        <label for="image"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"></path></svg><strong><%= product ? 'Choose a replacement image' : 'Upload a product image' %></strong><span>PNG, JPG, or WEBP · up to 5MB</span></label>
         <input id="image" name="image" type="file" accept="image/*" <%= product ? '' : 'required' %>>
-        <img id="image-preview" class="image-preview" src="<%= product ? product.image : '' %>" alt="Xem trước ảnh sản phẩm" <%= product ? '' : 'hidden' %>>
+        <img id="image-preview" class="image-preview" src="<%= product ? product.image : '' %>" alt="Product image preview" <%= product ? '' : 'hidden' %>>
       </div>
     </div>
   </section>
 
-  <div class="form-actions"><a class="button button-outline" href="/admin/products">Hủy</a><button class="button button-dark" type="submit"><%= submitLabel %></button></div>
+  <div class="form-actions"><a class="button button-outline" href="/admin/products">Cancel</a><button class="button button-dark" type="submit"><%= submitLabel %></button></div>
 </form>

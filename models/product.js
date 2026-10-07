@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const CATEGORIES = ['Nội thất', 'Chiếu sáng', 'Trang trí', 'Phòng bếp'];
+const CATEGORIES = ['Furniture', 'Lighting', 'Decor', 'Kitchen'];
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true, maxlength: 120 },

@@ -16,7 +16,7 @@ const removeImage = (imageUrl) => {
   fs.unlink(path.join(uploadRoot, imageUrl), () => {});
 };
 
-const notFound = () => Object.assign(new Error('Sản phẩm không tồn tại.'), { status: 404 });
+const notFound = () => Object.assign(new Error('Product not found.'), { status: 404 });
 const clean = (value) => typeof value === 'string' ? value.trim() : value;
 
 const productFields = (body) => ({
@@ -40,7 +40,7 @@ exports.home = async (req, res) => {
   ]);
 
   const categoryCounts = Object.fromEntries(categoryStats.map((item) => [item._id, item.count]));
-  res.render('home', { title: 'Nội thất tối giản cho nhịp sống hiện đại', featured, categoryCounts, categories: CATEGORIES });
+  res.render('home', { title: 'Minimal objects for considered living', featured, categoryCounts, categories: CATEGORIES });
 };
 
 exports.getAllProducts = async (req, res) => {
@@ -60,7 +60,7 @@ exports.getAllProducts = async (req, res) => {
   if (category) query.category = category;
 
   const products = await Product.find(query).sort(sortOptions[sort]);
-  res.render('products', { title: 'Tất cả sản phẩm', products, q, category, sort, categories: CATEGORIES });
+  res.render('products', { title: 'All products', products, q, category, sort, categories: CATEGORIES });
 };
 
 exports.showProductDetail = async (req, res) => {
@@ -72,18 +72,18 @@ exports.showProductDetail = async (req, res) => {
 
 exports.adminProducts = async (req, res) => {
   const products = await Product.find().sort({ updatedAt: -1 });
-  const notice = req.query.created ? 'Đã tạo sản phẩm mới.'
-    : req.query.updated ? 'Đã lưu thay đổi.'
-      : req.query.deleted ? 'Đã xóa sản phẩm.' : '';
-  res.render('admin/index', { title: 'Quản lý sản phẩm', products, notice });
+  const notice = req.query.created ? 'Product created successfully.'
+    : req.query.updated ? 'Changes saved successfully.'
+      : req.query.deleted ? 'Product deleted successfully.' : '';
+  res.render('admin/index', { title: 'Manage products', products, notice });
 };
 
 exports.showAddProductForm = (req, res) => {
-  res.render('admin/form-page', { title: 'Thêm sản phẩm', product: null, categories: CATEGORIES, formAction: '/admin/products', submitLabel: 'Tạo sản phẩm' });
+  res.render('admin/form-page', { title: 'Add product', product: null, categories: CATEGORIES, formAction: '/admin/products', submitLabel: 'Create product' });
 };
 
 exports.addProduct = async (req, res) => {
-  if (!req.file) throw new Error('Vui lòng chọn hình ảnh cho sản phẩm.');
+  if (!req.file) throw new Error('Please choose a product image.');
   try {
     await Product.create({ ...productFields(req.body), image: `/uploads/${req.file.filename}` });
   } catch (error) {
@@ -96,7 +96,7 @@ exports.addProduct = async (req, res) => {
 exports.showEditProductForm = async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (!product) throw notFound();
-  res.render('admin/form-page', { title: 'Chỉnh sửa sản phẩm', product, categories: CATEGORIES, formAction: `/admin/products/${product._id}?_method=PUT`, submitLabel: 'Lưu thay đổi' });
+  res.render('admin/form-page', { title: 'Edit product', product, categories: CATEGORIES, formAction: `/admin/products/${product._id}?_method=PUT`, submitLabel: 'Save changes' });
 };
 
 exports.updateProduct = async (req, res) => {

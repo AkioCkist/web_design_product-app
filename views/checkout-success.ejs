@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+<main id="main-content" class="shell success-page">
+  <div class="success-mark" aria-hidden="true">✓</div>
+  <p class="eyebrow">ORDER CONFIRMED</p>
+  <h1>Thank you, <%= order.customerName %>.</h1>
+  <p>Your demo order has been placed. A sample confirmation would be sent to <strong><%= order.email %></strong>.</p>
+  <div class="receipt-card">
+    <div><span>Order</span><strong class="tabular"><%= order.orderNumber %></strong></div>
+    <div><span>Items</span><strong class="tabular"><%= order.itemCount %></strong></div>
+    <div><span>Payment</span><strong><%= order.paymentLabel %></strong></div>
+    <div><span>Total</span><strong class="tabular"><%= formatVnd(order.total) %></strong></div>
+  </div>
+  <div class="success-actions"><a class="button button-dark" href="/products">Continue shopping</a><a class="button button-outline" href="/">Back home</a></div>
+  <p class="demo-note">This was a demonstration checkout. No charge was made and no fulfilment will occur.</p>
+</main>
+<%- include('partials/foot') %>

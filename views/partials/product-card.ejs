@@ -1,7 +1,7 @@
 <article class="product-card">
   <a class="product-media" href="/products/<%= product._id %>">
     <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy">
-    <% if (product.featured) { %><span class="product-badge">Tuyển chọn</span><% } %>
+    <% if (product.featured) { %><span class="product-badge">Selected</span><% } %>
     <span class="card-arrow" aria-hidden="true">↗</span>
   </a>
   <div class="product-copy">
